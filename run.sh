@@ -8,11 +8,10 @@ export TPM2_PKCS11_STORE
 
 if [ -z "$(docker images -q ${CONTAINER})" ]; then
     docker build -t ${CONTAINER} - <<EOF
-FROM alpine:3.20
-RUN apk add --no-cache p11-kit-server opensc
-RUN mkdir -p /etc/pkcs11/modules && echo "module: /usr/lib/pkcs11/p11-kit-client.so" | tee /etc/pkcs11/modules/p11-kit-client.module
-RUN echo "alias p11cmd='pkcs11-tool --module /usr/lib/pkcs11/p11-kit-client.so'" | tee /etc/profile.d/alias.sh
-CMD ["/bin/sh", "-l"]
+FROM ubuntu:24.04
+RUN apt update && apt install -y p11-kit libtpm2-pkcs11-1 libengine-pkcs11-openssl openssl opensc
+RUN mkdir -p /etc/pkcs11/modules && echo "module: /usr/lib/x86_64-linux-gnu/pkcs11/p11-kit-client.so" | tee /etc/pkcs11/modules/p11-kit-client.module
+RUN echo "alias p11cmd='pkcs11-tool --module /usr/lib/x86_64-linux-gnu/pkcs11/p11-kit-client.so'" | tee /root/.bash_aliases
 EOF
 fi
 
