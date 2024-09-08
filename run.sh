@@ -8,11 +8,9 @@ export TPM2_PKCS11_STORE
 
 if [ -z "$(docker images -q ${CONTAINER})" ]; then
     docker build -t ${CONTAINER} - <<EOF
-FROM alpine:3.20
-RUN apk add --no-cache p11-kit-server opensc
-RUN mkdir -p /etc/pkcs11/modules && echo "module: /usr/lib/pkcs11/p11-kit-client.so" | tee /etc/pkcs11/modules/p11-kit-client.module
-RUN echo "alias p11cmd='pkcs11-tool --module /usr/lib/pkcs11/p11-kit-client.so'" | tee /etc/profile.d/alias.sh
-CMD ["/bin/sh", "-l"]
+FROM fedora:40
+RUN dnf install -y p11-kit-server gnutls-utils openssl openssl-pkcs11
+RUN mkdir -p /etc/pkcs11/modules && echo "module: /usr/lib64/pkcs11/p11-kit-client.so" > /etc/pkcs11/modules/p11-kit-client.module
 EOF
 fi
 
