@@ -9,13 +9,11 @@ export TPM2_PKCS11_STORE
 if [ -z "$(docker images -q ${CONTAINER})" ]; then
     docker build -t ${CONTAINER} - <<EOF
 FROM alpine:3.20
-RUN apk add --no-cache p11-kit-server opensc
+RUN apk add --no-cache p11-kit-server gnutls-utils
 RUN mkdir -p /etc/pkcs11/modules && echo "module: /usr/lib/pkcs11/p11-kit-client.so" | tee /etc/pkcs11/modules/p11-kit-client.module
-RUN echo "alias p11cmd='pkcs11-tool --module /usr/lib/pkcs11/p11-kit-client.so'" | tee /etc/profile.d/alias.sh
-CMD ["/bin/sh", "-l"]
 EOF
 fi
 
-eval "$(p11-kit server --provider "${PROVIDER}" "pkcs11:")"
+eval "$(p11-kit server ${PROVIDER:+ --provider ${PROVIDER}} 'pkcs11:')"
 docker run --rm -it -v "${P11_KIT_SERVER_ADDRESS#*=}":"${P11_KIT_SERVER_ADDRESS#*=}" -e P11_KIT_SERVER_ADDRESS="${P11_KIT_SERVER_ADDRESS}" ${CONTAINER}
 kill -15 "${P11_KIT_SERVER_PID}"
