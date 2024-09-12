@@ -14,6 +14,6 @@ RUN mkdir -p /etc/pkcs11/modules && echo "module: /usr/lib64/pkcs11/p11-kit-clie
 EOF
 fi
 
-eval "$(p11-kit server --provider "${PROVIDER}" "pkcs11:")"
+eval "$(p11-kit server ${PROVIDER:+ --provider ${PROVIDER}} 'pkcs11:')"
 docker run --rm -it -v "${P11_KIT_SERVER_ADDRESS#*=}":"${P11_KIT_SERVER_ADDRESS#*=}" -e P11_KIT_SERVER_ADDRESS="${P11_KIT_SERVER_ADDRESS}" ${CONTAINER}
 kill -15 "${P11_KIT_SERVER_PID}"
