@@ -10,7 +10,7 @@ if [ -z "$(docker images -q ${CONTAINER})" ]; then
     docker build -t ${CONTAINER} - <<EOF
 FROM alpine:3.20
 RUN apk add --no-cache p11-kit-server gnutls-utils
-RUN mkdir -p /etc/pkcs11/modules && echo "module: /usr/lib/pkcs11/p11-kit-client.so" | tee /etc/pkcs11/modules/p11-kit-client.module
+RUN mkdir -p /etc/pkcs11/modules && echo "module: /usr/lib/pkcs11/p11-kit-client.so" > /etc/pkcs11/modules/p11-kit-client.module
 EOF
 fi
 
