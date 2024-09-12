@@ -1,6 +1,6 @@
 #!/bin/sh
 
-CONTAINER=p11-container
+CONTAINER=p11-container:alpine
 PROVIDER=/usr/lib/x86_64-linux-gnu/pkcs11/libtpm2_pkcs11.so
 TPM2_PKCS11_STORE="$(pwd)"
 
